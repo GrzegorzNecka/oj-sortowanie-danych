@@ -5,12 +5,20 @@ const tr = table.querySelectorAll("tr");
 const theadRow = table.querySelector("thead tr");
 const tbodyRows = table.querySelectorAll("tbody tr");
 
-console.log(tbodyRows);
+const createWalker = elem =>
+  document.createTreeWalker(elem, NodeFilter.SHOW_ELEMENT);
 
 theadRow.addEventListener("click", e => {
   if (e.target.localName === "a") {
     tbodyRows.forEach(tr => {
-      console.log(tr);
+      const walker = createWalker(tr);
+
+      while (walker.nextNode()) {
+        const elem = walker.currentNode;
+        const index = elem.cellIndex;
+        console.dir(elem);
+        console.dir(index);
+      }
     });
 
     // console.dir(e.target);
