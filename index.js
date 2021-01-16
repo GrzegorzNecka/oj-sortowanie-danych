@@ -30,18 +30,34 @@ const sortText = (tbodyRows, columnIndex) => {
   });
 };
 
+const sortNumber = (tbodyRows, columnIndex) => {
+  tbodyRows.sort(function(a, b) {
+    const tdA = a.children[columnIndex].textContent,
+      tdB = b.children[columnIndex].textContent;
+    return tdA - tdB;
+  });
+};
 //-----------------------
 
 function sortBy({ target }) {
-  const theadRow = Array.from(ths);
-  tbodyRows = Array.from(trs);
-  columnIndex = target.cellIndex;
+  const theadRow = Array.from(ths),
+    tbodyRows = Array.from(trs);
+
+  let columnIndex = target.cellIndex;
 
   deleteNthColor(tbodyRows);
 
-  sortText(tbodyRows, columnIndex);
+  if (target.tagName === "A") {
+    columnIndex = 2;
+    sortNumber(tbodyRows, columnIndex);
+  } else if (columnIndex === 2) {
+    sortNumber(tbodyRows, columnIndex);
+  } else if (target.tagName === "TH") {
+    sortText(tbodyRows, columnIndex);
+  } else {
+    return;
+  }
 
-  console.log(tbodyRows);
   tbodyRows.forEach(function(tr) {
     df.appendChild(tr);
   });
