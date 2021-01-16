@@ -39,11 +39,12 @@ const sortNumber = (tbodyRows, columnIndex) => {
 
 const setNewLayout = tbodyRows => {
   const df = document.createDocumentFragment();
+
   tbodyRows.forEach(function(tr) {
     df.appendChild(tr);
   });
 
-  const appendNewLayout = table.querySelector("tbody").appendChild(df);
+  table.querySelector("tbody").appendChild(df);
   addNthColor(table.querySelectorAll("tbody tr:nth-child(2)"));
 };
 //-----------------------
