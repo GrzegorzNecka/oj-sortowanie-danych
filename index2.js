@@ -1,7 +1,6 @@
 const table = document.querySelector(".table-auto"),
   ths = table.querySelectorAll("thead th"),
-  trs = table.querySelectorAll("tbody tr"),
-  df = document.createDocumentFragment();
+  trs = table.querySelectorAll("tbody tr");
 
 function sortBy({ target }) {
   const theadRow = Array.from(ths);
@@ -22,11 +21,6 @@ function sortBy({ target }) {
   });
 
   console.log(tbodyRows);
-  tbodyRows.forEach(function(tr) {
-    df.appendChild(tr);
-  });
-
-  table.querySelector("tbody").appendChild(df);
 }
 
 for (var i = 0; i < ths.length; i++) {
