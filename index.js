@@ -1,7 +1,6 @@
 const table = document.querySelector(".table-auto"),
   ths = table.querySelectorAll("thead th"),
-  trs = table.querySelectorAll("tbody tr"),
-  df = document.createDocumentFragment();
+  trs = table.querySelectorAll("tbody tr");
 
 const deleteNthColor = row => {
   row.forEach(tr => {
@@ -37,6 +36,16 @@ const sortNumber = (tbodyRows, columnIndex) => {
     return tdA - tdB;
   });
 };
+
+const setNewLayout = tbodyRows => {
+  const df = document.createDocumentFragment();
+  tbodyRows.forEach(function(tr) {
+    df.appendChild(tr);
+  });
+
+  const appendNewLayout = table.querySelector("tbody").appendChild(df);
+  addNthColor(table.querySelectorAll("tbody tr:nth-child(2)"));
+};
 //-----------------------
 
 function sortBy({ target }) {
@@ -58,12 +67,7 @@ function sortBy({ target }) {
     return;
   }
 
-  tbodyRows.forEach(function(tr) {
-    df.appendChild(tr);
-  });
-
-  const appendNewLayout = table.querySelector("tbody").appendChild(df);
-  addNthColor(table.querySelectorAll("tbody tr:nth-child(2)"));
+  setNewLayout(tbodyRows);
 }
 
 for (let i = 0; i < ths.length; i++) {
