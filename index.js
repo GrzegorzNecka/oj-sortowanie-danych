@@ -1,38 +1,28 @@
-// Tutaj napisz swój kod
+const table = document.querySelector(".table-auto"),
+  ths = table.querySelectorAll("thead th"),
+  trs = table.querySelectorAll("tbody tr");
 
-const table = document.querySelector(".table-auto");
-const trs = table.querySelectorAll("tbody tr");
-const ths = table.querySelectorAll("thead th");
-const makeArr = htmlElem => Array.from(htmlElem);
+function sortBy({ target }) {
+  const theadRow = Array.from(ths);
+  tbodyRows = Array.from(trs);
+  columnIndex = target.cellIndex;
 
-function sortBy(e) {
-  console.dir("target", e.target);
-  const index = e.target.cellIndex;
-  // console.dir(e.target.cellIndex);
-  let anc = makeArr(ths);
-  console.log(anc);
+  tbodyRows.sort(function(a, b) {
+    const tdA = a.children[columnIndex].textContent,
+      tdB = b.children[columnIndex].textContent;
 
-  console.log(anc.indexOf(e.target));
-
-  //============================
-
-  makeArr(trs).sort((a, b) => {
-    const tdA = a.children[index];
-    const tdB = b.children[index];
-    // console.log(tdA);
-    // console.log(tdB);
+    if (tdA < tdB) {
+      return 1;
+    } else if (tdA > tdB) {
+      return -1;
+    } else {
+      return 0;
+    }
   });
 
-  //test
-  makeArr(trs).forEach(a => {
-    const tdA = a.children[index];
-
-    console.log(tdA);
-  });
+  console.log(tbodyRows);
 }
 
-//13:15 -- https://eduweb.pl/programowanie-i-www/javascript/javascript-podstawy/sortowanie-tabeli-po-kolumnach-cz.-1
-//============================
-for (let i = 0; i < ths.length; i++) {
-  ths[i].addEventListener("click", sortBy, true);
+for (var i = 0; i < ths.length; i++) {
+  ths[i].addEventListener("click", sortBy);
 }
