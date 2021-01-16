@@ -27,8 +27,9 @@ function sortBy({ target }) {
   });
 
   table.querySelector("tbody").appendChild(df);
+  console.log(table);
 }
 
-for (var i = 0; i < ths.length; i++) {
+for (let i = 0; i < ths.length; i++) {
   ths[i].addEventListener("click", sortBy);
 }
