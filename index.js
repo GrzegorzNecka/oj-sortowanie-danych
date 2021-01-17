@@ -72,7 +72,7 @@ function sortBy({ target }) {
 
   const checkingFormat = tbodyRows.forEach(tr => {
     const timeElem = tr.children[columnIndex];
-    if (timeElem.textContent.indexOf(":") === 1) return;
+    if (timeElem.textContent.indexOf(":") === 1) {return;}
 
     sortByNumbers(tbodyRows, columnIndex);
     setFullyTime(tbodyRows, columnIndex);
