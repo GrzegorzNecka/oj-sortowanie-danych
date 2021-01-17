@@ -26,7 +26,7 @@ const setNewTimeVal = seconds => {
   return [hours, minutes];
 };
 
-const setFullTime = (tbodyRows, columnIndex) => {
+const setFullyTime = (tbodyRows, columnIndex) => {
   tbodyRows.forEach(tr => {
     const getTimeElem = tr.children[columnIndex];
     const getTimeVal = parseInt(getTimeElem.textContent);
@@ -74,7 +74,7 @@ function sortBy({ target }) {
     if (timeElem.textContent.indexOf(":") === 1) return;
 
     sortByNumbers(tbodyRows, columnIndex);
-    setFullTime(tbodyRows, columnIndex);
+    setFullyTime(tbodyRows, columnIndex);
     createNewLayout(tbodyRows);
   });
 }
