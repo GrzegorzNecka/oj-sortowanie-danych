@@ -14,20 +14,20 @@ const addNthColor = newTable => {
   newTable[0].classList.add("bg-gray-100");
 };
 
-const sortText = (tbodyRows, columnIndex) => {
-  tbodyRows.sort(function(a, b) {
-    const tdA = a.children[columnIndex].textContent,
-      tdB = b.children[columnIndex].textContent;
+// const sortText = (tbodyRows, columnIndex) => {
+//   tbodyRows.sort(function(a, b) {
+//     const tdA = a.children[columnIndex].textContent,
+//       tdB = b.children[columnIndex].textContent;
 
-    if (tdA < tdB) {
-      return 1;
-    } else if (tdA > tdB) {
-      return -1;
-    } else {
-      return 0;
-    }
-  });
-};
+//     if (tdA < tdB) {
+//       return 1;
+//     } else if (tdA > tdB) {
+//       return -1;
+//     } else {
+//       return 0;
+//     }
+//   });
+// };
 
 const sortNumber = (tbodyRows, columnIndex) => {
   tbodyRows.sort(function(a, b) {
@@ -38,37 +38,59 @@ const sortNumber = (tbodyRows, columnIndex) => {
 };
 
 const setNewLayout = tbodyRows => {
-  const df = document.createDocumentFragment();
+  const dokumentFragment = document.createDocumentFragment();
 
   tbodyRows.forEach(function(tr) {
-    df.appendChild(tr);
+    console.log(tr);
+    dokumentFragment.appendChild(tr);
   });
 
-  table.querySelector("tbody").appendChild(df);
+  table.querySelector("tbody").appendChild(dokumentFragment);
   addNthColor(table.querySelectorAll("tbody tr:nth-child(2)"));
 };
+
+const convertSecondIntoFullTime = seconds => {
+  const fullyMinutes = Math.floor(seconds / 60),
+    hours = Math.trunc(fullyMinutes / 60),
+    minutes = fullyMinutes % 60;
+
+  return [hours, minutes];
+};
+
 //-----------------------
 
-function sortBy({ target }) {
-  const theadRow = Array.from(ths),
-    tbodyRows = Array.from(trs);
+const setFullTime = (tbodyRows, columnIndex) => {
+  const newTbodyRows = tbodyRows.map(tr => {
+    const secondsElem = tr.children[columnIndex];
+    const secondsVal = parseInt(secondsElem.textContent);
 
+    console.log(convertSecondIntoFullTime(secondsVal));
+
+    const newSecondsVal = convertSecondIntoFullTime(secondsVal);
+    secondsElem.innerText = `${newSecondsVal[0]}:${newSecondsVal[1]}`;
+
+    return tr;
+  });
+
+  console.dir(newTbodyRows);
+};
+
+function sortBy({ target }) {
+  const theadRow = Array.from(ths);
+  const tbodyRows = Array.from(trs);
   let columnIndex = target.cellIndex;
 
-  deleteNthColor(tbodyRows);
-
   if (target.tagName === "A") {
-    columnIndex = 2;
+    columnIndex = target.parentElement.cellIndex;
+    deleteNthColor(tbodyRows);
     sortNumber(tbodyRows, columnIndex);
-  } else if (columnIndex === 2) {
-    sortNumber(tbodyRows, columnIndex);
-  } else if (target.tagName === "TH") {
-    sortText(tbodyRows, columnIndex);
+
+    setFullTime(tbodyRows, columnIndex);
+
+    setNewLayout(tbodyRows);
   } else {
     return;
   }
-
-  setNewLayout(tbodyRows);
 }
 
 for (let i = 0; i < ths.length; i++) {
