@@ -27,15 +27,13 @@ const setNewTimeVal = seconds => {
 };
 
 const setFullTime = (tbodyRows, columnIndex) => {
-  tbodyRows.map(tr => {
+  tbodyRows.forEach(tr => {
     const getTimeElem = tr.children[columnIndex];
     const getTimeVal = parseInt(getTimeElem.textContent);
     const newTimeVal = setNewTimeVal(getTimeVal);
     const setFormatedVal = (getTimeElem.innerText = `${newTimeVal[0]}:${
       newTimeVal[1]
     }`);
-
-    return tr;
   });
 };
 
