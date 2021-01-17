@@ -31,6 +31,7 @@ const setFullyTime = (tbodyRows, columnIndex) => {
     const getTimeElem = tr.children[columnIndex];
     const getTimeVal = parseInt(getTimeElem.textContent);
     const newTimeVal = setNewTimeVal(getTimeVal);
+
     const setFormatedVal = (getTimeElem.innerText = `${newTimeVal[0]}:${
       newTimeVal[1]
     }`);
@@ -41,6 +42,7 @@ const sortByNumbers = (tbodyRows, columnIndex) => {
   tbodyRows.sort(function(a, b) {
     const tdA = a.children[columnIndex].textContent;
     const tdB = b.children[columnIndex].textContent;
+
     return tdA - tdB;
   });
 };
@@ -50,6 +52,7 @@ const setNewLayout = tbodyRows => {
   const appendToDocFragment = tbodyRows.forEach(function(tr) {
     docFragment.appendChild(tr);
   });
+
   const appendToTable = tbody.appendChild(docFragment);
 };
 
@@ -62,9 +65,7 @@ const createNewLayout = tbodyRows => {
 //------executing  functions
 
 function sortBy({ target }) {
-  if (target.tagName != "A") {
-    return;
-  }
+  if (target.tagName != "A") {return;}
 
   const columnIndex = target.parentElement.cellIndex;
   const tbodyRows = Array.from(trs);
