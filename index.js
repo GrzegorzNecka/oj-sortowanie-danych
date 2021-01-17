@@ -47,7 +47,7 @@ const sortByNumbers = (tbodyRows, columnIndex) => {
 
 const setNewLayout = tbodyRows => {
   const docFragment = document.createDocumentFragment();
-  const appendTodocFragment = tbodyRows.forEach(function(tr) {
+  const appendToDocFragment = tbodyRows.forEach(function(tr) {
     docFragment.appendChild(tr);
   });
   const appendToTable = tbody.appendChild(docFragment);
