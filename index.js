@@ -1,8 +1,12 @@
 const table = document.querySelector(".table-auto"),
+  tbody = table.querySelector("tbody"),
   ths = table.querySelectorAll("thead th"),
-  trs = table.querySelectorAll("tbody tr");
+  trs = tbody.querySelectorAll("tr"),
+  evenTrs = () => tbody.querySelectorAll("tr:nth-child(2)");
 
-const deleteNthColor = row => {
+//------ auxiliary functions
+
+const deleteEvenTrColor = row => {
   row.forEach(tr => {
     if (tr.classList.contains("bg-gray-100")) {
       tr.classList.remove("bg-gray-100");
@@ -10,89 +14,77 @@ const deleteNthColor = row => {
   });
 };
 
-const addNthColor = newTable => {
+const addEvenTrColor = newTable => {
   newTable[0].classList.add("bg-gray-100");
 };
 
-// const sortText = (tbodyRows, columnIndex) => {
-//   tbodyRows.sort(function(a, b) {
-//     const tdA = a.children[columnIndex].textContent,
-//       tdB = b.children[columnIndex].textContent;
+const setNewTimeVal = seconds => {
+  const fullyMinutes = Math.floor(seconds / 60);
+  const hours = Math.trunc(fullyMinutes / 60);
+  const minutes = fullyMinutes % 60;
 
-//     if (tdA < tdB) {
-//       return 1;
-//     } else if (tdA > tdB) {
-//       return -1;
-//     } else {
-//       return 0;
-//     }
-//   });
-// };
+  return [hours, minutes];
+};
 
-const sortNumber = (tbodyRows, columnIndex) => {
+const setFullTime = (tbodyRows, columnIndex) => {
+  tbodyRows.map(tr => {
+    const getTimeElem = tr.children[columnIndex];
+    const getTimeVal = parseInt(getTimeElem.textContent);
+    const newTimeVal = setNewTimeVal(getTimeVal);
+    const setFormatedVal = (getTimeElem.innerText = `${newTimeVal[0]}:${
+      newTimeVal[1]
+    }`);
+
+    return tr;
+  });
+};
+
+const sortByNumbers = (tbodyRows, columnIndex) => {
   tbodyRows.sort(function(a, b) {
-    const tdA = a.children[columnIndex].textContent,
-      tdB = b.children[columnIndex].textContent;
+    const tdA = a.children[columnIndex].textContent;
+    const tdB = b.children[columnIndex].textContent;
     return tdA - tdB;
   });
 };
 
 const setNewLayout = tbodyRows => {
-  const dokumentFragment = document.createDocumentFragment();
-
-  tbodyRows.forEach(function(tr) {
-    console.log(tr);
-    dokumentFragment.appendChild(tr);
+  const docFragment = document.createDocumentFragment();
+  const appendTodocFragment = tbodyRows.forEach(function(tr) {
+    docFragment.appendChild(tr);
   });
-
-  table.querySelector("tbody").appendChild(dokumentFragment);
-  addNthColor(table.querySelectorAll("tbody tr:nth-child(2)"));
+  const appendToTable = tbody.appendChild(docFragment);
 };
 
-const convertSecondIntoFullTime = seconds => {
-  const fullyMinutes = Math.floor(seconds / 60),
-    hours = Math.trunc(fullyMinutes / 60),
-    minutes = fullyMinutes % 60;
-
-  return [hours, minutes];
+const createNewLayout = tbodyRows => {
+  deleteEvenTrColor(tbodyRows);
+  setNewLayout(tbodyRows);
+  addEvenTrColor(evenTrs());
 };
 
-//-----------------------
-
-const setFullTime = (tbodyRows, columnIndex) => {
-  const newTbodyRows = tbodyRows.map(tr => {
-    const secondsElem = tr.children[columnIndex];
-    const secondsVal = parseInt(secondsElem.textContent);
-
-    console.log(convertSecondIntoFullTime(secondsVal));
-
-    const newSecondsVal = convertSecondIntoFullTime(secondsVal);
-    secondsElem.innerText = `${newSecondsVal[0]}:${newSecondsVal[1]}`;
-
-    return tr;
-  });
-
-  console.dir(newTbodyRows);
-};
+//------executing  functions
 
 function sortBy({ target }) {
-  const theadRow = Array.from(ths);
-  const tbodyRows = Array.from(trs);
-  let columnIndex = target.cellIndex;
-
-  if (target.tagName === "A") {
-    columnIndex = target.parentElement.cellIndex;
-    deleteNthColor(tbodyRows);
-    sortNumber(tbodyRows, columnIndex);
-
-    setFullTime(tbodyRows, columnIndex);
-
-    setNewLayout(tbodyRows);
-  } else {
+  if (target.tagName != "A") {
     return;
+  }
+
+  const columnIndex = target.parentElement.cellIndex;
+  const tbodyRows = Array.from(trs);
+
+  const checkingFormat = tbodyRows.forEach(tr => {
+    const timeElem = tr.children[columnIndex];
+    if (timeElem.textContent.indexOf(":") === 1) return;
+
+    sortByNumbers(tbodyRows, columnIndex);
+    setFullTime(tbodyRows, columnIndex);
+    createNewLayout(tbodyRows);
+  });
+}
+
+function sortTable() {
+  for (let i = 0; i < ths.length; i++) {
+    ths[i].addEventListener("click", sortBy);
   }
 }
 
-for (let i = 0; i < ths.length; i++) {
-  ths[i].addEventListener("click", sortBy);
-}
+sortTable();
